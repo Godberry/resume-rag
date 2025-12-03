@@ -3,7 +3,7 @@ uvicorn[standard]
 python-dotenv
 langchain-community
 langchain-openai
-langchain-chroma
+langchain-pinecone
 langchain-text-splitters
 langchain
 chromadb
