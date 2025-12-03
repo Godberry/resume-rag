@@ -1,26 +1,31 @@
 """FastAPI backend for resume RAG chatbot."""
 import os
-from typing import List
-
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
-from langchain_chroma import Chroma
+from langchain_pinecone import PineconeVectorStore
 from langchain_classic.chains import create_retrieval_chain
 from langchain_classic.chains.combine_documents import create_stuff_documents_chain
 from langchain_classic.prompts import PromptTemplate
 
 load_dotenv()
 API_KEY = os.getenv("OPENAI_API_KEY")
+PINECONE_API_KEY = os.getenv("PINECONE_API_KEY")
+PINECONE_INDEX_NAME = os.getenv("PINECONE_INDEX_NAME", "resume-rag")
+
 if not API_KEY:
     raise RuntimeError("OPENAI_API_KEY 環境變數未設定。")
+if not PINECONE_API_KEY:
+    raise RuntimeError("PINECONE_API_KEY 環境變數未設定。")
 
 MY_NAME = "許皓翔"
 
 # 初始化 FastAPI
-app = FastAPI(title="Resume RAG API", description="基於履歷的 RAG 聊天後端", version="1.0.0")
+app = FastAPI(title="Resume RAG API",
+              description="基於履歷的 RAG 聊天後端",
+              version="1.0.0")
 
 # CORS（前端本地開發預設允許）
 app.add_middleware(
@@ -43,9 +48,9 @@ class ChatResponse(BaseModel):
 
 
 # 初始化向量資料庫與 chain（與原 app.py 相同邏輯）
-vector_store = Chroma(
-    persist_directory="./chroma_db",
-    embedding_function=OpenAIEmbeddings(api_key=API_KEY),
+vector_store = PineconeVectorStore(
+    index_name=PINECONE_INDEX_NAME,
+    embedding=OpenAIEmbeddings(api_key=API_KEY),
 )
 
 retriever = vector_store.as_retriever(search_kwargs={"k": 3})
@@ -84,7 +89,7 @@ async def chat(req: ChatRequest) -> ChatResponse:
     try:
         result = qa_chain.invoke({"input": req.message})
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
     answer = result.get("answer", "抱歉，目前無法產生回應。")
     return ChatResponse(answer=answer)
