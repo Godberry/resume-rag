@@ -1,3 +1,6 @@
+fastapi
+uvicorn[standard]
+python-dotenv
 langchain-community
 langchain-openai
 langchain-chroma
@@ -6,5 +9,3 @@ langchain
 chromadb
 openai
 tiktoken
-python-dotenv
-streamlit
