@@ -13,11 +13,11 @@ def ingest_knowledge_base():
     api_key = os.getenv("OPENAI_API_KEY")
     if not api_key:
         raise ValueError("請設定 OPENAI_API_KEY 環境變數。")
-    
+
     pinecone_api_key = os.getenv("PINECONE_API_KEY")
     if not pinecone_api_key:
         raise ValueError("請設定 PINECONE_API_KEY 環境變數。")
-    
+
     index_name = os.getenv("PINECONE_INDEX_NAME", "resume-rag")
 
     loader = DirectoryLoader(
@@ -48,7 +48,7 @@ def ingest_knowledge_base():
 
     # Initialize Pinecone
     pc = Pinecone(api_key=pinecone_api_key)
-    
+
     # Create index if it doesn't exist
     if index_name not in pc.list_indexes().names():
         pc.create_index(
@@ -57,13 +57,13 @@ def ingest_knowledge_base():
             metric="cosine",
             spec=ServerlessSpec(cloud="aws", region="us-east-1")
         )
-    
+
     # Ingest documents into Pinecone
     embeddings = OpenAIEmbeddings(
         api_key=api_key,
         model="text-embedding-3-small",
     )
-    
+
     PineconeVectorStore.from_documents(
         documents=final_chunks,
         embedding=embeddings,

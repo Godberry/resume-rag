@@ -4,8 +4,7 @@ python-dotenv
 langchain-community
 langchain-openai
 langchain-pinecone
-langchain-text-splitters
 langchain
-chromadb
 openai
+langchain-google-firestore
 tiktoken
