@@ -19,8 +19,8 @@ MAX_HISTORY_TOKENS = int(os.getenv("MAX_HISTORY_TOKENS", "2000"))
 RECENT_MESSAGES_TO_KEEP = int(os.getenv("RECENT_MESSAGES_TO_KEEP", "6"))
 
 EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL", "text-embedding-3-small")
-TOKEN_ENCODING_MODEL = os.getenv("TOKEN_ENCODING_MODEL", "gpt-4o-mini")
-QA_CHAT_MODEL = os.getenv("QA_CHAT_MODEL", "gpt-4.1-mini")
+TOKEN_ENCODING_MODEL = os.getenv("TOKEN_ENCODING_MODEL", "gpt-5-mini")
+QA_CHAT_MODEL = os.getenv("QA_CHAT_MODEL", "openai:gpt-5-mini")
 
 
 MY_NAME = "許皓翔"
