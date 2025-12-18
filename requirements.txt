@@ -6,5 +6,6 @@ langchain-openai
 langchain-pinecone
 langchain
 openai
-langchain-google-firestore
+langgraph
 tiktoken
+pydantic-settings

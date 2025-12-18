@@ -19,4 +19,4 @@ COPY . .
 
 # 6. 啟動 FastAPI（Cloud Run 預設會設 PORT 環境變數）
 ENV PORT=8080
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080"]
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8080"]
